@@ -18,7 +18,7 @@ CLIP_MODEL_ID = "openai/clip-vit-base-patch32"
 CLIP_DIM      = 512                               # output dim for ViT-B/32
 
 # ── Retrieval ─────────────────────────────────────────────────────────────────
-TOP_K         = 5
+TOP_K         = 8
 TEXT_WEIGHT   = 0.5
 IMAGE_WEIGHT  = 0.5
 
