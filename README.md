@@ -100,6 +100,22 @@ All major settings are located in `config.py`. You can adjust:
 
 ---
 
+## 🗺️ Roadmap
+
+The following features and optimizations are planned for future releases. Detailed implementation notes can be found in [TODOs.md](TODOs.md).
+
+- **Qwen3-VL Embedding Integration** (#1): Support for instruction-aware multimodal embeddings using Qwen3-VL-Embedding-2B.
+- **Local VLM Generator** (#2): Support for Qwen3-VL-2B-Instruct as a local vision-language generator.
+- **vLLM API Serving** (#3): Move to a standalone OpenAI-compatible vLLM server for high-concurrency orchestration.
+- **Semantic Caching & Optimization** (#4): Implementation of Redis semantic caching and HNSW vector indexing for low-latency retrieval.
+- **Observability & Monitoring** (#5): Integration of Prometheus metrics and health-check endpoints for production reliability.
+- **Unified Model Launcher** (#6): A comprehensive CLI switch for toggling between local and cloud backends.
+- **Granular Metadata Filtering** (#7): Expanded sidebar filters for dimensions, material, and excavation trench.
+- **Analytical Report Export** (#8): Exporting artifact analysis and retrieval results as PDF or JSON reports.
+- **Geospatial Mapping** (#9): Interactive visualization of artifact discovery locations.
+
+---
+
 ## 📝 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
