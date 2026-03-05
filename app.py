@@ -30,7 +30,7 @@ project_choices: list = []      # unique project names for filter dropdown
 IMAGES_ROOT = None   # set in main()
 
 def load_artifact_images(idx: int):
-    """Load images for a given artifact index from the HF dataset."""
+    """Load the first available image for a given artifact index."""
     if dataset is None:
         return []
     row = dataset[idx]
@@ -46,8 +46,9 @@ def load_artifact_images(idx: int):
     if hf_img_cols:
         for col in sorted(hf_img_cols):
             img = row.get(col)
-            if img is not None:
+            if img:
                 images.append(img)
+                break  # Only one image per artifact
     elif "image_paths" in dataset.column_names and IMAGES_ROOT:
         # Load from paths
         from PIL import Image as PILImage
@@ -61,6 +62,7 @@ def load_artifact_images(idx: int):
             if abs_path.exists():
                 try:
                     images.append(PILImage.open(abs_path).convert("RGB"))
+                    break  # Only one image per artifact
                 except Exception:
                     pass
     return images
