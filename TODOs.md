@@ -1,64 +1,81 @@
 # ArchAIaGPT Roadmap & TODOs 🚀
 
-This document tracks planned architectural upgrades, professional orchestration tasks, and feature enhancements for the ArchAIaGPT system.
+This document tracks planned architectural upgrades, professional orchestration tasks, and feature enhancements for the ArchAIaGPT system. Each item below includes a proposed **GitHub Issue Title** for easy tracking.
 
 ---
 
 ## 🏗️ Future Implementation: Qwen3-VL Integration
 
-We aim to move towards a unified, fully local, and multimodal architecture using the **Qwen3-VL** model family.
+### 1. Unified Multimodal Embeddings
+**Issue Title:** `feat: Integrate Qwen3-VL-Embedding-2B for multimodal retrieval`
 
-### 1. Unified Multimodal Embeddings (Qwen3-VL-Embedding-2B)
 **Goal:** Replace CLIP with a model that can encode combined Text+Image inputs into a single semantic vector, enabling "Instruction-Aware" search.
 
 *   **Model URL:** [huggingface.co/Qwen/Qwen3-VL-Embedding-2B](https://huggingface.co/Qwen/Qwen3-VL-Embedding-2B)
 *   **Backend:** [vLLM](https://github.com/vllm-project/vllm) with `runner="pooling"`
-*   **Detailed Implementation Tasks:**
-    *   [ ] **Custom Encoder**: Implement `embeddings/qwen_encoder.py` wrapping vLLM's pooling output.
-    *   [ ] **Chat Template Logic**: Use `tokenizer.apply_chat_template` to ensure inputs match the training distribution exactly.
-    *   [ ] **Feature Indexing**: Re-build FAISS indexes to support the 2048-dimensional vectors (or appropriate dim for the 2B model).
-    *   [ ] **Quantization**: Explore `fp8` or `awq` for the embedding model to reduce VRAM footprint while maintaining retrieval precision.
+*   **Tasks:**
+    *   [ ] Implement `embeddings/qwen_encoder.py` wrapping vLLM's pooling output.
+    *   [ ] Use `tokenizer.apply_chat_template` for exact training distribution matching.
+    *   [ ] Re-build FAISS indexes for 2048-dimensional vectors.
+    *   [ ] Explore `fp8` or `awq` for the embedding model.
 
 ---
 
-### 2. Local Multimodal Generation (Qwen3-VL-2B-Instruct)
+### 2. Local Multimodal Generation
+**Issue Title:** `feat: Support Qwen3-VL-2B-Instruct as local VLM generator`
+
 **Goal:** Transition from text-only RAG to Vision-Language RAG, where the LLM can "see" the artifacts it is discussing.
 
 *   **Model URL:** [huggingface.co/Qwen/Qwen3-VL-2B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct)
 *   **Tasks:**
-    *   [ ] **Vision-Aware Generator**: Update `generation/generator.py` to handle `image` content types in the messages payload.
-    *   [ ] **Multimodal Context Builder**: Refactor `context_builder.py` to return a list of message blocks (Text + File URLs) for the top-8 artifacts.
-    *   [ ] **Prompt Engineering**: Develop specific system prompts for "Archaeological Visual Analysis" that instruct the model to reference specific optical features in the provided images.
+    *   [ ] Update `generation/generator.py` to handle `image` content types.
+    *   [ ] Refactor `context_builder.py` to return message blocks (Text + Image paths).
+    *   [ ] Develop system prompts for Optical Archaeological Analysis.
 
 ---
 
 ## 🌐 Orchestration & Production Serving
 
-To serve ArchAIaGPT to a wider audience with high reliability and performance, the following orchestration tasks are prioritized:
+### 3. High-Concurrency vLLM Serving
+**Issue Title:** `orchestration: Move to standalone vLLM OpenAI-compatible API server`
 
-### 1. High-Concurrency Serving
-*   [ ] **API Separation**: Decouple the Gradio UI from the model. Move from "Offline Inference" to an **OpenAI-compatible vLLM Server**.
-    *   *Command:* `python -m vllm.entrypoints.openai.api_server --model Qwen/Qwen3-VL-2B-Instruct --limit-mm-per-prompt image=8`
-*   [ ] **Continuous Batching**: Standardize on vLLM to leverage continuous batching, which allows multiple users to be served simultaneously with minimal latency overhead.
-*   [ ] **Gradio Queuing**: Enable `.queue(default_concurrency_limit=10)` in `app.py` to prevent server crashes under high load.
+**Goal:** Decouple the UI from the model and enable concurrent request handling.
+*   [ ] Implement API separation using vLLM entrypoints.
+*   [ ] Enable continuous batching for simultaneous user support.
+*   [ ] Configure Gradio queuing and concurrency limits.
 
-### 2. Caching & Latency Optimization
-*   [ ] **Semantic Caching**: Integrate **Redis** with **GPTCache** to store and retrieve identical or highly similar queries without re-running the embedding or generation stages.
-*   [ ] **FAISS Optimization**: Move from `IndexFlatIP` (Brute Force) to `IndexIVFFlat` or `HNSW` to maintain sub-10ms retrieval as the artifact database scales.
-*   [ ] **KV Cache Management**: Tune vLLM's `gpu_memory_utilization` and `max_num_seqs` to maximize throughput on the specific GPU hardware available.
+### 4. Semantic Caching & Vector Latency
+**Issue Title:** `perf: Implement Redis semantic caching and HNSW vector index`
 
-### 3. Monitoring & Reliability
-*   [ ] **Health Checks**: Implement `/health` endpoints for the API and UI to integration with Docker/Kubernetes health probes.
-*   [ ] **Observability**: Integrate **Prometheus** exporters to track:
-    *   Requests per second (RPS)
-    *   Time to First Token (TTFT)
-    *   GPU Utilization and Memory pressure.
-*   [ ] **Rate Limiting**: Implement basic rate limiting at the Nginx or application level to prevent API abuse.
+**Goal:** Sub-10ms retrieval and zero-cost repeated queries.
+*   [ ] Integrate **Redis** with **GPTCache**.
+*   [ ] Migrate FAISS from `IndexFlatIP` to `IndexIVFFlat` or `HNSW`.
+*   [ ] Tune KV cache management for specific hardware.
+
+### 5. Production Monitoring & Observability
+**Issue Title:** `reliability: Add Prometheus monitoring and health-check endpoints`
+
+**Goal:** Professional system visibility and automated recovery.
+*   [ ] Implement `/health` endpoints for Docker/K8s probes.
+*   * [ ] Integrate Prometheus exporters for RPS, TTFT, and GPU metrics.
+*   [ ] Implement application-level Rate Limiting.
 
 ---
 
 ## 🛠️ General Feature Roadmap
-- [ ] **Unified Mode Switch**: Add a `--local_vlm` flag to `scripts/launch.sh` for easy environment toggling.
-- [ ] **Metadata Filtering Expansion**: Add more granular filters (trench, material, dimensions, Munsell color) to the Gradio UI side-panel.
-- [ ] **Export Feature**: Add a "Generate Report" button to export the retrieved artifacts and the LLM analysis as a formatted PDF or JSON file.
-- [ ] **Interactive Map**: Visualize artifact discovery locations using a Map component (e.g., Gradio's `gr.Plot` with Plotly or a custom Leaflet integration).
+
+### 6. Unified Model Launcher
+**Issue Title:** `enhancement: Add unified mode switch for Local vs Cloud backends`
+*   [ ] Add `--local_vlm` flag to `scripts/launch.sh`.
+
+### 7. Advanced Metadata Filtering
+**Issue Title:** `ui: Expand sidebar filters to include trench, material, and dimensions`
+*   [ ] Add more granular filter dropdowns/sliders to the side-panel.
+
+### 8. Analytical Report Export
+**Issue Title:** `feat: Add PDF/JSON export for artifact analysis reports`
+*   [ ] Implement "Generate Report" functionality for retrieved results.
+
+### 9. Geospatial Visualization
+**Issue Title:** `ui: Integrate interactive map for artifact discovery locations`
+*   [ ] Visualize coordinates using Plotly or Leaflet integration.
