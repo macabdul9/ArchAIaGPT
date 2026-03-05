@@ -69,6 +69,18 @@ class Retriever:
         self.n = self.text_index.ntotal
         print(f"[Retriever] Index size: {self.n} artifacts")
 
+        # ── Move to GPU if available ──────────────────────────────────────────
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        if self.device.startswith("cuda") and hasattr(faiss, "index_cpu_to_gpu"):
+            try:
+                print(f"[Retriever] Moving FAISS indexes to {self.device} ...")
+                self.res = faiss.StandardGpuResources()
+                self.text_index  = faiss.index_cpu_to_gpu(self.res, 0, self.text_index)
+                self.image_index = faiss.read_index(image_index_path) # reload for safety then move
+                self.image_index = faiss.index_cpu_to_gpu(self.res, 0, self.image_index)
+            except Exception as e:
+                print(f"[Retriever] Warning: Could not move FAISS to GPU: {e}. Falling back to CPU.")
+
         # ── Load metadata sidecar ─────────────────────────────────────────────
         print(f"[Retriever] Loading metadata:    {meta_path}")
         self.metadata: List[dict] = []
@@ -82,7 +94,8 @@ class Retriever:
         )
 
         # ── CLIP encoder (shared for all queries) ─────────────────────────────
-        self.encoder = CLIPEncoder(model_id=clip_model, device=device)
+        import torch
+        self.encoder = CLIPEncoder(model_id=clip_model, device=self.device)
 
         print("[Retriever] Ready.\n")
 

@@ -7,7 +7,7 @@ datasets
 # (uses transformers CLIPModel — no separate package needed)
 
 # FAISS index
-faiss-cpu                 # swap to faiss-gpu if GPU available
+faiss-gpu
 
 # LLM generation (OpenAI-compatible — works for both OpenAI + vLLM)
 openai>=1.0.0

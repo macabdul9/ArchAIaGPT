@@ -9,7 +9,7 @@ The system leverages **OpenAI CLIP** for multimodal embedding and **FAISS** for 
 ## 🚀 Key Features
 
 *   **Multimodal Search**: Seamlessly query using text descriptions, uploaded images, or a combination of both.
-*   **Dual-Index Retriever**: Utilizes separate FAISS indexes for text and image embeddings, with a weighted fusion mechanism to rank results.
+*   **Dual-Index Retriever**: Utilizes separate FAISS indexes (accelerated with **FAISS-GPU**) for text and image embeddings, with a weighted fusion mechanism to rank results.
 *   **Hierarchical Analytical Context**: Specifically optimized for the *Archaia* dataset, retrieving across five levels of description:
     *   **Level 1**: Basic Identification
     *   **Level 2**: Physical Classification
