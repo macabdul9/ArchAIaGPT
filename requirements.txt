@@ -1,0 +1,21 @@
+# ArchAIaGPT dependencies
+torch>=2.1.0
+transformers>=4.40.0
+datasets
+
+# CLIP embedding
+# (uses transformers CLIPModel — no separate package needed)
+
+# FAISS index
+faiss-cpu                 # swap to faiss-gpu if GPU available
+
+# LLM generation (OpenAI-compatible — works for both OpenAI + vLLM)
+openai>=1.0.0
+
+# Gradio demo
+gradio>=4.0.0
+
+# Standard
+Pillow
+numpy
+pandas

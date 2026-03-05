@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Conda
+.conda/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Output files
+output.json
+results.json
+*.log
+
+# Model cache
+.cache/
+models/
+*.pt
+*.pth
+*.ckpt
+
+# Data
+data/
+datasets/
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Environment variables
+.env
+.env.local
+*.pdf
+2407.08521v2.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# ArchAIaGPT specific
+indexes/
+*.faiss
+metadata.jsonl
+
+# OS
+.DS_Store
+.ipynb_checkpoints/
