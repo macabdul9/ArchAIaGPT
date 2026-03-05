@@ -173,7 +173,7 @@ def build_app() -> gr.Blocks:
             with gr.Column(scale=1):
                 query_box = gr.Textbox(
                     label="Query",
-                    value="Fuel and Plant Use in Northern Mesopotamia",
+                    value="Cultural practices and artistic developments across the Roman Imperial, Orientalizing, and Archaic periods",
                     placeholder="e.g. What types of terracotta tiles were found at Murlo?",
                     lines=3,
                     elem_id="query_input",
