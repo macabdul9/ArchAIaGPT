@@ -10,6 +10,10 @@ SHARE="--share"
 
 cd "$(dirname "$0")/.."
 
+# Fix for PermissionError in shared /tmp/gradio
+export GRADIO_TEMP_DIR="$(pwd)/.gradio_tmp"
+mkdir -p "$GRADIO_TEMP_DIR"
+
 echo "--- ArchAIaGPT: Launch Mode ---"
 
 python app.py \

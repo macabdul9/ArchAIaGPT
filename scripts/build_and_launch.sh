@@ -19,6 +19,10 @@ SHARE="--share"
 # Ensure we are in the repo root
 cd "$(dirname "$0")/.."
 
+# Fix for PermissionError in shared /tmp/gradio
+export GRADIO_TEMP_DIR="$(pwd)/.gradio_tmp"
+mkdir -p "$GRADIO_TEMP_DIR"
+
 echo "--- ArchAIaGPT: Build & Launch ---"
 echo "Project root: $(pwd)"
 

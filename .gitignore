@@ -73,6 +73,7 @@ venv/
 indexes/
 *.faiss
 metadata.jsonl
+.gradio_tmp/
 
 # OS
 .DS_Store
