@@ -13,7 +13,7 @@ DEVICE="cuda"
 TEXT_FIELDS="level_5_description"
 MAX_IMAGES=1
 GEN_BACKEND="openai"
-PORT=7860
+PORT=7861
 SHARE="--share"
 
 # Ensure we are in the repo root

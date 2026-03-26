@@ -10,6 +10,7 @@ from typing import Dict, List, Optional
 
 import faiss
 import numpy as np
+import torch
 
 from embeddings.clip_encoder import CLIPEncoder
 from config import (
@@ -94,7 +95,6 @@ class Retriever:
         )
 
         # ── CLIP encoder (shared for all queries) ─────────────────────────────
-        import torch
         self.encoder = CLIPEncoder(model_id=clip_model, device=self.device)
 
         print("[Retriever] Ready.\n")

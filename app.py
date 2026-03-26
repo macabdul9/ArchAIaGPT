@@ -248,7 +248,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="ArchAIaGPT Gradio Demo")
     parser.add_argument("--share",       action="store_true", help="Create public Gradio link")
-    parser.add_argument("--port",        type=int, default=7860)
+    parser.add_argument("--port",        type=int, default=7861)
     parser.add_argument("--dataset",     default=str(DATASET_PATH),  help="Path to HF dataset")
     parser.add_argument("--images_root", default="/data/group_data/dei-group/archaia",
                        help="Root dir for resolving relative image paths")

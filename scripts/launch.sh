@@ -5,7 +5,7 @@ set -e
 
 DATASET="/data/group_data/dei-group/archaia/archaia_hf_final"
 GEN_BACKEND="openai"
-PORT=7860
+PORT=7861
 SHARE="--share"
 
 cd "$(dirname "$0")/.."
