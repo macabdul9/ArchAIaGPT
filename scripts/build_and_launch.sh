@@ -1,53 +1,44 @@
 #!/bin/bash
-# Simpler launch script for ArchAIaGPT
+# Builds and launches the ArchAIaGPT app with multimodal features.
 
 set -e
 
-# Default Config
+# Configuration
 DATASET="/data/group_data/dei-group/archaia/archaia_hf_final"
 IMAGES_ROOT="/data/group_data/dei-group/archaia"
 INDEX_DIR="indexes"
-CLIP_MODEL="openai/clip-vit-base-patch32"
-BATCH_SIZE=32
+MODEL_TYPE="clip"
 DEVICE="cuda"
-TEXT_FIELDS="level_5_description"
-MAX_IMAGES=1
-GEN_BACKEND="openai"
 PORT=7861
 SHARE="--share"
 
-# Ensure we are in the repo root
 cd "$(dirname "$0")/.."
 
 # Fix for PermissionError in shared /tmp/gradio
 export GRADIO_TEMP_DIR="$(pwd)/.gradio_tmp"
 mkdir -p "$GRADIO_TEMP_DIR"
 
-echo "--- ArchAIaGPT: Build & Launch ---"
-echo "Project root: $(pwd)"
+export PYTHONPATH=$PYTHONPATH:.
 
-# 1. Build Index if missing
+echo "--- ArchAIaGPT: Full Build & Launch ---"
+
+# 1. Build Index if missing for the default model
 if [ ! -f "${INDEX_DIR}/text.faiss" ] || [ ! -f "${INDEX_DIR}/image.faiss" ]; then
-    echo "Indexes missing. Building CLIP embeddings..."
+    echo "Default indexes missing. Building CLIP embeddings..."
     python embeddings/build_index.py \
         --dataset     "${DATASET}" \
         --out_dir     "${INDEX_DIR}" \
         --images_root "${IMAGES_ROOT}" \
-        --text_fields ${TEXT_FIELDS} \
-        --max_images  "${MAX_IMAGES}" \
-        --clip_model  "${CLIP_MODEL}" \
-        --batch_size  "${BATCH_SIZE}" \
+        --model_type  "${MODEL_TYPE}" \
         --device      "${DEVICE}"
 else
     echo "Indexes found in ${INDEX_DIR}. Skipping build."
 fi
 
-# 2. Launch App
+# 2. Launch Gradio App
 echo "Launching Gradio app on port ${PORT}..."
-CMD="python app.py --dataset ${DATASET} --port ${PORT} --gen_backend ${GEN_BACKEND}"
-
-if [ "${SHARE}" = "--share" ]; then
-    CMD="${CMD} --share"
-fi
-
-exec ${CMD}
+python app.py \
+    --dataset "${DATASET}" \
+    --images_root "${IMAGES_ROOT}" \
+    --port ${PORT} \
+    ${SHARE}

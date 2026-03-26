@@ -1,18 +1,11 @@
-"""
-ArchAIaGPT/embeddings/clip_encoder.py
-──────────────────────────────────────
-CLIP encoder wrapper — text and image encoding with L2-normalisation.
-Uses openai/clip-vit-base-patch32 via HuggingFace transformers.
-"""
-
 import torch
 import numpy as np
 from typing import List
 from PIL import Image
 from transformers import CLIPModel, CLIPProcessor
+from .base_encoder import BaseEncoder
 
-
-class CLIPEncoder:
+class CLIPEncoder(BaseEncoder):
     """Thin wrapper around HF CLIPModel for batched text/image encoding."""
 
     def __init__(self, model_id: str = "openai/clip-vit-base-patch32", device: str = None):

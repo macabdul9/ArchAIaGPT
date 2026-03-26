@@ -78,3 +78,10 @@ metadata.jsonl
 # OS
 .DS_Store
 .ipynb_checkpoints/
+
+embeddings_output
+VLM2Vec
+implementation-plan.md
+feedback.csv
+feedback.jsonl
+.hf_cache
